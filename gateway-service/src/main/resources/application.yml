@@ -1,0 +1,21 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      routes:
+        # Route 1: Forwarding checkout transactions to the Inventory Service
+        - id: inventory-route
+          uri: http://localhost:8080
+          predicates:
+            - Path=/api/v1/purchase/**
+
+        # Route 2: Forwarding order verification lookups to the Order Service
+        - id: order-route
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/orders/**
