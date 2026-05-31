@@ -1,7 +1,7 @@
 import requests
 import threading
 
-URL = "http://localhost:8080/api/v1/purchase"
+URL = "http://localhost:8000/api/v1/purchase"
 PAYLOAD = {
     "productId": 1,
     "quantity": 1
