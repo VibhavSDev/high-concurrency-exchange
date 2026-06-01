@@ -33,6 +33,7 @@ public class InventoryEventConsumer {
             log.info("Successfully deserialized event for Product ID: {}", event.getProductId());
 
             Order order = Order.builder()
+                    .eventId(event.getEventId())
                     .productId(event.getProductId())
                     .quantity(event.getQuantity())
                     .orderStatus(OrderStatus.SUCCESS)

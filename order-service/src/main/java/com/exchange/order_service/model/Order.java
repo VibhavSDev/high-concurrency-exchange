@@ -1,5 +1,6 @@
 package com.exchange.order_service.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,7 @@ public class Order {
     private Long id;
 
     @Column(name = "event_id", unique = true, nullable = false)
+    @JsonProperty("eventId")
     private Long eventId;
 
     private Long productId;
