@@ -7,15 +7,36 @@ spring:
 
   cloud:
     gateway:
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 5s
       routes:
         # Route 1: Forwarding checkout transactions to the Inventory Service
         - id: inventory-route
           uri: http://localhost:8080
           predicates:
             - Path=/api/v1/purchase/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: inventoryCircuitBreaker
+                fallbackUri: forward:/fallback/inventory-unavailable
 
         # Route 2: Forwarding order verification lookups to the Order Service
         - id: order-route
           uri: http://localhost:8081
           predicates:
             - Path=/api/v1/orders/**
+
+resilience4j:
+  circuitBreaker:
+    instances:
+      inventoryCircuitBreaker:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 20s
+        permittedNumberOfCallsInHalfOpenState: 3
+        ignoreExceptions:
+          - org.springframework.web.client.HttpClientErrorException
+          - org.springframework.web.reactive.function.client.WebClientResponseException
